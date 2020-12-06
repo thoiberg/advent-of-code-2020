@@ -11,7 +11,7 @@ fn main() {
 
 fn part_one_solution(passwords: Vec<Password>) -> i32 {
     passwords.iter().fold(0, |acc, pwd| {
-        if password_meets_requirements(&pwd) {
+        if pwd.valid() {
             return acc + 1;
         }
 
@@ -21,30 +21,6 @@ fn part_one_solution(passwords: Vec<Password>) -> i32 {
     // break the expression into two fields, count and character
     // search for all instances of the character in the password (not sure how)
     // convert the count into a range and determine if characters match
-}
-
-fn password_meets_requirements(password: &Password) -> bool {
-    let expr: Vec<&str> = password.validation_expression.split(" ").collect();
-    let count = expr[0];
-    let character = expr[1];
-
-    let password_chars: Vec<char> = password.password.chars().collect();
-    let matching_count = password_chars.iter().fold(0, |acc, &char| {
-        if char.to_string() == character {
-            return acc + 1;
-        }
-
-        acc
-    });
-
-    let count_min_and_max: Vec<i32> = count
-        .split("-")
-        .map(|x| x.parse::<i32>().unwrap())
-        .collect();
-
-    let count_range = count_min_and_max[0]..=count_min_and_max[1];
-
-    count_range.contains(&matching_count)
 }
 
 fn read_input() -> Result<Vec<String>, ioError> {
@@ -57,9 +33,45 @@ fn parse_passwords(data: &Vec<String>) -> Vec<Password> {
 }
 
 #[derive(Debug)]
+struct RangeExpression {
+    character: String,
+    range: std::ops::RangeInclusive<i32>,
+}
+
+impl RangeExpression {
+    fn new(range_string: String) -> RangeExpression {
+        let expr: Vec<&str> = range_string.split(" ").collect();
+        let range = expr[0];
+        let character = expr[1];
+        let range_nums: Vec<i32> = range
+            .split("-")
+            .map(|x| x.parse::<i32>().unwrap())
+            .collect();
+
+        RangeExpression {
+            character: String::from(character),
+            range: range_nums[0]..=range_nums[1],
+        }
+    }
+
+    fn valid(&self, password: &String) -> bool {
+        let password_chars: Vec<char> = password.chars().collect();
+        let matching_count = password_chars.iter().fold(0, |acc, &char| {
+            if char.to_string() == self.character {
+                return acc + 1;
+            }
+
+            acc
+        });
+
+        self.range.contains(&matching_count)
+    }
+}
+
+#[derive(Debug)]
 struct Password {
     password: String,
-    validation_expression: String,
+    expression: RangeExpression,
 }
 
 impl Password {
@@ -68,8 +80,12 @@ impl Password {
 
         Password {
             password: String::from(pieces[1]),
-            validation_expression: String::from(pieces[0]),
+            expression: RangeExpression::new(String::from(pieces[0])),
         }
+    }
+
+    fn valid(&self) -> bool {
+        self.expression.valid(&self.password)
     }
 }
 
