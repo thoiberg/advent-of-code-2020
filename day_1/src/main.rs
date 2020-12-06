@@ -3,24 +3,24 @@ use std::io::Error as ioError;
 fn main() {
     let data = read_and_process_input().unwrap();
 
-    let one_answer = part_one_solution(&data);
+    let first_solution = part_one_solution(&data);
 
-    match one_answer {
+    match first_solution {
         Some(x) => println!("Part One Solution is: {}", x),
         None => println!("No answer for Part One found :("),
     }
 
-    let two_answer = part_two_solution(&data);
+    let second_solution = part_two_solution(&data);
 
-    match two_answer {
+    match second_solution {
         Some(x) => println!("Part Two Solution is: {}", x),
         None => println!("No answer for Part One found :("),
     }
 }
 
 fn part_one_solution(data: &Vec<i32>) -> Option<i32> {
-    for i in data {
-        for j in data {
+    for (i_index, i) in data.iter().enumerate() {
+        for j in &data[i_index..] {
             if i + j == 2020 {
                 return Some(i * j);
             }
