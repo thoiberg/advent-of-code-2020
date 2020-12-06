@@ -1,7 +1,8 @@
 use std::io::Error as ioError;
 
 fn main() {
-    let data = read_and_process_input().unwrap();
+    let mut data = read_and_process_input().unwrap();
+    data.sort();
 
     let first_solution = part_one_solution(&data);
 
@@ -21,8 +22,10 @@ fn main() {
 fn part_one_solution(data: &Vec<i32>) -> Option<i32> {
     for (i_index, i) in data.iter().enumerate() {
         for j in &data[i_index..] {
-            if i + j == 2020 {
-                return Some(i * j);
+            match i + j {
+                2020 => return Some(i * j),
+                d if d > 2021 => break,
+                _ => continue,
             }
         }
     }
@@ -58,13 +61,17 @@ mod tests {
 
     #[test]
     fn test_part_one_sample() {
-        let data = [1721, 979, 366, 299, 675, 1456].to_vec();
+        let mut data = [1721, 979, 366, 299, 675, 1456].to_vec();
+        data.sort();
+
         assert_eq!(part_one_solution(&data).unwrap(), 514579);
     }
 
     #[test]
     fn test_part_one_solution_works() {
-        let data = read_and_process_input().unwrap();
+        let mut data = read_and_process_input().unwrap();
+        data.sort();
+
         assert_eq!(part_one_solution(&data).unwrap(), 970816);
     }
 
