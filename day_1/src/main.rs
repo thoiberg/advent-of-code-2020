@@ -23,6 +23,10 @@ fn part_one_solution(data: &Vec<i32>) -> Option<i32> {
     None
 }
 
+fn part_two_solution(data: &Vec<i32>) -> Option<i32> {
+    None
+}
+
 fn read_and_process_input() -> Result<Vec<i32>, ioError> {
     let contents = include_str!("input_data");
     Ok(contents
@@ -45,5 +49,11 @@ mod tests {
     fn test_part_one_solution_works() {
         let data = read_and_process_input().unwrap();
         assert_eq!(part_one_solution(&data).unwrap(), 970816);
+    }
+
+    #[test]
+    fn test_part_two_sample() {
+        let data = [1721, 979, 366, 299, 675, 1456].to_vec();
+        assert_eq!(part_two_solution(&data).unwrap(), 241861950);
     }
 }
