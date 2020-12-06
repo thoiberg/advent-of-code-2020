@@ -1,20 +1,8 @@
 use std::io::Error as ioError;
 
 fn main() {
-    println!("Hello, world!");
-
-    let data = parse_input().unwrap();
-
-    let passwords: Vec<Password> = data
-        .iter()
-        .map(|val| {
-            let pieces: Vec<&str> = val.split(": ").collect();
-            Password {
-                password: String::from(pieces[1]),
-                validation_expression: String::from(pieces[0]),
-            }
-        })
-        .collect();
+    let data = read_input().unwrap();
+    let passwords = parse_passwords(&data);
 
     let first_solution = part_one_solution(passwords);
 
@@ -59,9 +47,13 @@ fn password_meets_requirements(password: &Password) -> bool {
     count_range.contains(&matching_count)
 }
 
-fn parse_input() -> Result<Vec<String>, ioError> {
+fn read_input() -> Result<Vec<String>, ioError> {
     let contents = include_str!("input_data");
     Ok(contents.split('\n').map(String::from).collect())
+}
+
+fn parse_passwords(data: &Vec<String>) -> Vec<Password> {
+    data.iter().map(|val| Password::new(val)).collect()
 }
 
 #[derive(Debug)]
@@ -70,43 +62,37 @@ struct Password {
     validation_expression: String,
 }
 
+impl Password {
+    fn new(data_entry: &String) -> Password {
+        let pieces: Vec<&str> = data_entry.split(": ").collect();
+
+        Password {
+            password: String::from(pieces[1]),
+            validation_expression: String::from(pieces[0]),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_part_one_example() {
-        let passwords = vec![
-            Password {
-                password: String::from("abcde"),
-                validation_expression: String::from("1-3 a"),
-            },
-            Password {
-                password: String::from("cdefg"),
-                validation_expression: String::from("1-3 b"),
-            },
-            Password {
-                password: String::from("ccccccccc"),
-                validation_expression: String::from("2-9 c"),
-            },
+        let data = vec![
+            String::from("1-3 a: abcde"),
+            String::from("1-3 b: cdefg"),
+            String::from("2-9 c: ccccccccc"),
         ];
+        let passwords = parse_passwords(&data);
 
         assert_eq!(part_one_solution(passwords), 2);
     }
 
     #[test]
     fn test_part_one_solution() {
-        let input_data = parse_input().unwrap();
-        let passwords: Vec<Password> = input_data
-            .iter()
-            .map(|val| {
-                let pieces: Vec<&str> = val.split(": ").collect();
-                Password {
-                    password: String::from(pieces[1]),
-                    validation_expression: String::from(pieces[0]),
-                }
-            })
-            .collect();
+        let input_data = read_input().unwrap();
+        let passwords = parse_passwords(&input_data);
 
         assert_eq!(part_one_solution(passwords), 424);
     }
