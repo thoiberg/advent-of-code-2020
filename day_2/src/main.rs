@@ -165,14 +165,17 @@ impl Password {
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_part_one_example() {
-        let data = vec![
+    fn test_data() -> Vec<String> {
+        vec![
             String::from("1-3 a: abcde"),
             String::from("1-3 b: cdefg"),
             String::from("2-9 c: ccccccccc"),
-        ];
-        let passwords = parse_passwords(&data, Expression::RangeExpression);
+        ]
+    }
+
+    #[test]
+    fn test_part_one_example() {
+        let passwords = parse_passwords(&test_data(), Expression::RangeExpression);
 
         assert_eq!(part_one_solution(passwords), 2);
     }
@@ -187,12 +190,7 @@ mod tests {
 
     #[test]
     fn test_part_two_example() {
-        let data = vec![
-            String::from("1-3 a: abcde"),
-            String::from("1-3 b: cdefg"),
-            String::from("2-9 c: ccccccccc"),
-        ];
-        let passwords = parse_passwords(&data, Expression::PositionExpression);
+        let passwords = parse_passwords(&test_data(), Expression::PositionExpression);
 
         assert_eq!(part_two_solution(passwords), 1);
     }
