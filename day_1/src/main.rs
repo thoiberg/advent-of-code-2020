@@ -2,20 +2,25 @@ use std::io::Error as ioError;
 
 fn main() {
     let data = read_and_process_input().unwrap();
-    println!("{}", data.len());
-    println!("{}", data[0]);
 
-    // iterate through data
-    //  for each value iterate through the array again
-    // add both values together. If they match 2020 multiply them together
-    // and return result
-    for i in &data {
-        for j in &data {
+    let one_answer = part_one_solution(&data);
+
+    match one_answer {
+        Some(x) => println!("Part One Solution is: {}", x),
+        None => println!("No answer for Part One found :("),
+    }
+}
+
+fn part_one_solution(data: &Vec<i32>) -> Option<i32> {
+    for i in data {
+        for j in data {
             if i + j == 2020 {
-                println!("Answer is: {}", i * j);
+                return Some(i * j);
             }
         }
     }
+
+    None
 }
 
 fn read_and_process_input() -> Result<Vec<i32>, ioError> {
