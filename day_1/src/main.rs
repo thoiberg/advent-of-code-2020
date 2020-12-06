@@ -24,7 +24,7 @@ fn part_one_solution(data: &Vec<i32>) -> Option<i32> {
         for j in &data[i_index..] {
             match i + j {
                 2020 => return Some(i * j),
-                d if d > 2021 => break,
+                d if d > 2020 => break,
                 _ => continue,
             }
         }
@@ -34,11 +34,17 @@ fn part_one_solution(data: &Vec<i32>) -> Option<i32> {
 }
 
 fn part_two_solution(data: &Vec<i32>) -> Option<i32> {
-    for i in data {
-        for j in data {
-            for k in data {
-                if i + j + k == 2020 {
-                    return Some(i * j * k);
+    for (i_index, i) in data.iter().enumerate() {
+        for (j_index, j) in (&data[i_index..]).iter().enumerate() {
+            if i + j > 2020 {
+                break;
+            }
+
+            for k in &data[j_index..] {
+                match i + j + k {
+                    2020 => return Some(i * j * k),
+                    d if d > 2020 => break,
+                    _ => continue,
                 }
             }
         }
@@ -77,13 +83,17 @@ mod tests {
 
     #[test]
     fn test_part_two_sample() {
-        let data = [1721, 979, 366, 299, 675, 1456].to_vec();
+        let mut data = [1721, 979, 366, 299, 675, 1456].to_vec();
+        data.sort();
+
         assert_eq!(part_two_solution(&data).unwrap(), 241861950);
     }
 
     #[test]
     fn test_part_two_solution_works() {
-        let data = read_and_process_input().unwrap();
+        let mut data = read_and_process_input().unwrap();
+        data.sort();
+
         assert_eq!(part_two_solution(&data).unwrap(), 96047280);
     }
 }
