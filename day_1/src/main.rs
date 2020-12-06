@@ -9,6 +9,13 @@ fn main() {
         Some(x) => println!("Part One Solution is: {}", x),
         None => println!("No answer for Part One found :("),
     }
+
+    let two_answer = part_two_solution(&data);
+
+    match two_answer {
+        Some(x) => println!("Part Two Solution is: {}", x),
+        None => println!("No answer for Part One found :("),
+    }
 }
 
 fn part_one_solution(data: &Vec<i32>) -> Option<i32> {
@@ -24,6 +31,16 @@ fn part_one_solution(data: &Vec<i32>) -> Option<i32> {
 }
 
 fn part_two_solution(data: &Vec<i32>) -> Option<i32> {
+    for i in data {
+        for j in data {
+            for k in data {
+                if i + j + k == 2020 {
+                    return Some(i * j * k);
+                }
+            }
+        }
+    }
+
     None
 }
 
@@ -55,5 +72,11 @@ mod tests {
     fn test_part_two_sample() {
         let data = [1721, 979, 366, 299, 675, 1456].to_vec();
         assert_eq!(part_two_solution(&data).unwrap(), 241861950);
+    }
+
+    #[test]
+    fn test_part_two_solution_works() {
+        let data = read_and_process_input().unwrap();
+        assert_eq!(part_two_solution(&data).unwrap(), 96047280);
     }
 }
