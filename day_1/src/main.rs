@@ -30,3 +30,20 @@ fn read_and_process_input() -> Result<Vec<i32>, ioError> {
         .map(|val| val.parse::<i32>().unwrap())
         .collect())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part_one_sample() {
+        let data = [1721, 979, 366, 299, 675, 1456].to_vec();
+        assert_eq!(part_one_solution(&data).unwrap(), 514579);
+    }
+
+    #[test]
+    fn test_part_one_solution_works() {
+        let data = read_and_process_input().unwrap();
+        assert_eq!(part_one_solution(&data).unwrap(), 970816);
+    }
+}
