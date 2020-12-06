@@ -1,4 +1,6 @@
-use day_2::*;
+// use day_2::lib::expression::*;
+// use day_2::lib::password::*;
+use day_2::lib::*;
 use std::io::Error as ioError;
 
 fn main() {
