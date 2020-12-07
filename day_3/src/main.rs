@@ -6,13 +6,29 @@ fn main() {
     let first_solution = part_one_solution(&data);
 
     println!("The Part One Solution is: {}", first_solution);
+
+    let second_solution = part_two_solution(&data);
+
+    println!("The Part Two Solution is: {}", second_solution);
 }
 
-fn part_one_solution(data: &Vec<Vec<char>>) -> i32 {
-    find_trees(&data, 1, 3)
+fn part_one_solution(data: &Vec<Vec<char>>) -> i64 {
+    find_trees(data, 1, 3)
 }
 
-fn find_trees(data: &Vec<Vec<char>>, row_step: usize, column_step: usize) -> i32 {
+fn part_two_solution(data: &Vec<Vec<char>>) -> i64 {
+    vec![
+        find_trees(data, 1, 1),
+        find_trees(data, 1, 3),
+        find_trees(data, 1, 5),
+        find_trees(data, 1, 7),
+        find_trees(data, 2, 1),
+    ]
+    .iter()
+    .fold(1, |acc, val| acc * val)
+}
+
+fn find_trees(data: &Vec<Vec<char>>, row_step: usize, column_step: usize) -> i64 {
     let number_of_columns = data[0].len();
     let tree_character = '#';
 
@@ -66,5 +82,17 @@ mod tests {
         let data = read_input().unwrap();
 
         assert_eq!(part_one_solution(&data), 211);
+    }
+
+    #[test]
+    fn test_part_two_example() {
+        assert_eq!(part_two_solution(&example_data()), 336);
+    }
+
+    #[test]
+    fn test_part_two_solution() {
+        let data = read_input().unwrap();
+
+        assert_eq!(part_two_solution(&data), 3584591857);
     }
 }
