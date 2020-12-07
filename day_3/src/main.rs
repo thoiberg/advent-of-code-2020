@@ -8,61 +8,57 @@ fn main() {
     println!("The Part One Solution is: {}", first_solution);
 }
 
-fn part_one_solution(data: &Vec<String>) -> i32 {
-    let multi_array: Vec<Vec<char>> = data.iter().map(|x| x.chars().collect()).collect();
+fn part_one_solution(data: &Vec<Vec<char>>) -> i32 {
+    find_trees(&data, 1, 3)
+}
 
-    let number_of_columns = multi_array[0].len();
-    let row_step = 1;
-    let column_step = 3;
+fn find_trees(data: &Vec<Vec<char>>, row_step: usize, column_step: usize) -> i32 {
+    let number_of_columns = data[0].len();
     let tree_character = '#';
 
     let mut row_position = 0;
-    let mut col_position = 0;
+    let mut column_position = 0;
     let mut tree_counter = 0;
 
-    while row_position < multi_array.len() {
-        let column_idx = col_position % number_of_columns;
-        let current_position = multi_array[row_position][column_idx];
+    while row_position < data.len() {
+        let column_idx = column_position % number_of_columns;
+        let current_position = data[row_position][column_idx];
 
         if current_position == tree_character {
             tree_counter += 1;
         };
         row_position += row_step;
-        col_position += column_step;
+        column_position += column_step;
     }
 
     tree_counter
 }
 
-fn read_input() -> Result<Vec<String>, ioError> {
+fn read_input() -> Result<Vec<Vec<char>>, ioError> {
     let contents = include_str!("input_data");
-    Ok(contents.split('\n').map(String::from).collect())
+    process_input(contents)
+}
+
+fn process_input(contents: &str) -> Result<Vec<Vec<char>>, ioError> {
+    Ok(contents
+        .split('\n')
+        .map(String::from)
+        .map(|x| x.chars().collect())
+        .collect())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    fn example_data() -> Vec<Vec<char>> {
+        let contents = include_str!("example_data");
+        process_input(contents).unwrap()
+    }
+
     #[test]
     fn test_part_one_example() {
-        let data = vec![
-            "..##.......",
-            "#...#...#..",
-            ".#....#..#.",
-            "..#.#...#.#",
-            ".#...##..#.",
-            "..#.##.....",
-            ".#.#.#....#",
-            ".#........#",
-            "#.##...#...",
-            "#...##....#",
-            ".#..#...#.#",
-        ]
-        .iter()
-        .map(|s| String::from(*s))
-        .collect();
-
-        assert_eq!(part_one_solution(&data), 7);
+        assert_eq!(part_one_solution(&example_data()), 7);
     }
 
     #[test]
