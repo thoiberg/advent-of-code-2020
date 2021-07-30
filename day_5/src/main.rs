@@ -1,27 +1,38 @@
+use std::cmp;
 use std::io::Error as ioError;
 
 fn main() {
     let boarding_passes = read_input().unwrap();
+
+    println!(
+        "Part One Solution is: {}",
+        part_one_solution(boarding_passes)
+    );
+}
+
+fn part_one_solution(boarding_passes: Vec<BoardingPass>) -> i32 {
+    boarding_passes
+        .iter()
+        .fold(0, |acc, pass| cmp::max(acc, pass.seat_id()))
 }
 
 fn read_input() -> Result<Vec<BoardingPass>, ioError> {
     let contents = include_str!("puzzle_data");
 
-    let strings: Vec<String> = contents.split("\n").map(String::from).collect();
+    process_data(contents)
+}
 
-    let mut boarding_passes: Vec<BoardingPass> = vec![];
-
-    for string in strings {
-        let boarding_pass = BoardingPass::new(string);
-        boarding_passes.push(boarding_pass);
-    }
-
+fn process_data(data: &str) -> Result<Vec<BoardingPass>, ioError> {
+    let boarding_passes: Vec<BoardingPass> = data
+        .split("\n")
+        .map(|s| BoardingPass::new(String::from(s)))
+        .collect();
     Ok(boarding_passes)
 }
 
 struct BoardingPass {
-    pub row_locator: Vec<char>,
-    pub column_locator: Vec<char>,
+    row_locator: Vec<char>,
+    column_locator: Vec<char>,
 }
 
 impl BoardingPass {
@@ -37,10 +48,10 @@ impl BoardingPass {
         }
     }
 
-    pub fn row(self) -> i32 {
+    pub fn row(&self) -> i32 {
         let mut row_number = 0..=127;
 
-        for direction in self.row_locator {
+        for direction in &self.row_locator {
             let step: f32 = (*row_number.end() as f32 - *row_number.start() as f32) / 2_f32;
 
             row_number = match direction {
@@ -53,10 +64,10 @@ impl BoardingPass {
         *row_number.end()
     }
 
-    pub fn column(self) -> i32 {
+    pub fn column(&self) -> i32 {
         let mut column_number = 0..=7;
 
-        for direction in self.row_locator {
+        for direction in &self.column_locator {
             let step: f32 = (*column_number.end() as f32 - *column_number.start() as f32) / 2_f32;
 
             column_number = match direction {
@@ -67,6 +78,10 @@ impl BoardingPass {
         }
 
         *column_number.end()
+    }
+
+    pub fn seat_id(&self) -> i32 {
+        (self.row() * 8) + self.column()
     }
 }
 
@@ -88,5 +103,21 @@ mod tests {
         assert_eq!(BoardingPass::new(String::from("BFFFBBFRRR")).column(), 7);
         assert_eq!(BoardingPass::new(String::from("FFFBBBFRRR")).column(), 7);
         assert_eq!(BoardingPass::new(String::from("BBFFBBFRLL")).column(), 4);
+    }
+
+    #[test]
+    fn seat_id_returns_computed_seat_id() {
+        assert_eq!(BoardingPass::new(String::from("FBFBBFFRLR")).seat_id(), 357);
+        assert_eq!(BoardingPass::new(String::from("BFFFBBFRRR")).seat_id(), 567);
+        assert_eq!(BoardingPass::new(String::from("FFFBBBFRRR")).seat_id(), 119);
+        assert_eq!(BoardingPass::new(String::from("BBFFBBFRLL")).seat_id(), 820);
+    }
+
+    #[test]
+    fn example_data_returns_max_seat_id() {
+        let contents = include_str!("example_data");
+        let boarding_passes = process_data(contents).unwrap();
+
+        assert_eq!(part_one_solution(boarding_passes), 820);
     }
 }
