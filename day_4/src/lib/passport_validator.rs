@@ -72,7 +72,7 @@ fn validate_height(height: &Option<String>) -> bool {
             if within_array(vec![&in_symbol, &cm_symbol], &Some(&format)) {
                 if format == cm_symbol {
                     return all_characters_are_int(&Some(height_number))
-                        && within_range(150..=190, &height_number_2.parse::<i32>().ok());
+                        && within_range(150..=193, &height_number_2.parse::<i32>().ok());
                 } else if format == in_symbol {
                     return all_characters_are_int(&Some(height_number))
                         && within_range(59..=76, &height_number_2.parse::<i32>().ok());
@@ -121,5 +121,71 @@ mod tests {
         let passport = Passport::new(passport_data);
 
         assert_eq!(validate_passport(&passport), false);
+    }
+
+    #[test]
+    fn validate_birth_year_checks_within_range() {
+        assert_eq!(validate_birth_year(&Some(1920)), true);
+        assert_eq!(validate_birth_year(&Some(1989)), true);
+        assert_eq!(validate_birth_year(&Some(2002)), true);
+
+        assert_eq!(validate_birth_year(&Some(1919)), false);
+        assert_eq!(validate_birth_year(&Some(2003)), false);
+    }
+
+    #[test]
+    fn validate_issue_year_checks_within_range() {
+        assert_eq!(validate_issue_year(&Some(2010)), true);
+        assert_eq!(validate_issue_year(&Some(2015)), true);
+        assert_eq!(validate_issue_year(&Some(2020)), true);
+
+        assert_eq!(validate_issue_year(&Some(2009)), false);
+        assert_eq!(validate_issue_year(&Some(2021)), false);
+    }
+
+    #[test]
+    fn validate_expiration_year_checks_within_range() {
+        assert_eq!(validate_expiration_year(&Some(2020)), true);
+        assert_eq!(validate_expiration_year(&Some(2025)), true);
+        assert_eq!(validate_expiration_year(&Some(2030)), true);
+
+        assert_eq!(validate_expiration_year(&Some(2019)), false);
+        assert_eq!(validate_expiration_year(&Some(2031)), false);
+    }
+
+    #[test]
+    fn validate_hair_color_is_hex_code() {
+        assert_eq!(validate_hair_color(&Some(String::from("#123abc"))), true);
+
+        assert_eq!(validate_hair_color(&Some(String::from("#123abz"))), false);
+        assert_eq!(validate_hair_color(&Some(String::from("123abc"))), false);
+    }
+
+    #[test]
+    fn validate_eye_color_is_one_of_options() {
+        assert_eq!(validate_eye_color(&Some(String::from("amb"))), true);
+        assert_eq!(validate_eye_color(&Some(String::from("blu"))), true);
+        assert_eq!(validate_eye_color(&Some(String::from("brn"))), true);
+        assert_eq!(validate_eye_color(&Some(String::from("gry"))), true);
+        assert_eq!(validate_eye_color(&Some(String::from("grn"))), true);
+        assert_eq!(validate_eye_color(&Some(String::from("hzl"))), true);
+        assert_eq!(validate_eye_color(&Some(String::from("oth"))), true);
+
+        assert_eq!(validate_eye_color(&Some(String::from("wat"))), false);
+    }
+
+    #[test]
+    fn validate_pid_is_nine_digit_number() {
+        assert_eq!(validate_pid(&Some(String::from("000000001"))), true);
+        assert_eq!(validate_pid(&Some(String::from("0123456789"))), false);
+    }
+
+    #[test]
+    fn validate_height_matches_format() {
+        assert_eq!(validate_height(&Some(String::from("60in"))), true);
+        assert_eq!(validate_height(&Some(String::from("190cm"))), true);
+
+        assert_eq!(validate_height(&Some(String::from("190in"))), false);
+        assert_eq!(validate_height(&Some(String::from("190"))), false);
     }
 }

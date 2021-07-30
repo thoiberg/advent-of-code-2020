@@ -7,7 +7,7 @@ fn main() {
     let also_passports = read_input().unwrap();
 
     let first_solution = part_one_solution(passports);
-    let second_solution = part_two_solution(&also_passports);
+    let second_solution = part_two_solution(also_passports);
 
     println!("The Part One Solution is: {}", first_solution);
     println!("The Part Two Solution is: {}", second_solution);
@@ -28,7 +28,7 @@ fn part_one_solution(passports: Vec<Vec<String>>) -> i32 {
     })
 }
 
-fn part_two_solution(passports: &Vec<Vec<String>>) -> i32 {
+fn part_two_solution(passports: Vec<Vec<String>>) -> i32 {
     let mut passport_objs: Vec<Passport> = vec![];
 
     for passport in passports {
@@ -96,6 +96,11 @@ mod tests {
     fn test_part_two_valid_passports() {
         let example_data = part_two_test_data();
 
-        assert_eq!(part_two_solution(&example_data), 4);
+        assert_eq!(part_two_solution(example_data), 4);
+    }
+
+    #[test]
+    fn test_part_two_solution() {
+        assert_eq!(part_two_solution(read_input().unwrap()), 121)
     }
 }
