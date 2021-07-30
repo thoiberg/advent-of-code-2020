@@ -6,14 +6,37 @@ fn main() {
 
     println!(
         "Part One Solution is: {}",
-        part_one_solution(boarding_passes)
+        part_one_solution(&boarding_passes)
     );
+    println!(
+        "Part Two Solution is: {}",
+        part_two_solution(&boarding_passes)
+    )
 }
 
-fn part_one_solution(boarding_passes: Vec<BoardingPass>) -> i32 {
+fn part_one_solution(boarding_passes: &Vec<BoardingPass>) -> i32 {
     boarding_passes
         .iter()
         .fold(0, |acc, pass| cmp::max(acc, pass.seat_id()))
+}
+
+fn part_two_solution(boarding_passes: &Vec<BoardingPass>) -> i32 {
+    let all_possible_seat_range: std::ops::RangeInclusive<i32> = 0..=(127 * 8 + 7);
+    let all_possible_seat_ids: Vec<i32> = all_possible_seat_range.collect();
+
+    let known_seat_ids: Vec<i32> = boarding_passes.iter().map(|pass| pass.seat_id()).collect();
+
+    let empty_seats = all_possible_seat_ids
+        .iter()
+        .filter(|seat_id| !known_seat_ids.contains(seat_id));
+
+    for seat in empty_seats {
+        if known_seat_ids.contains(&(seat + 1)) && known_seat_ids.contains(&(seat - 1)) {
+            return *seat;
+        }
+    }
+
+    0
 }
 
 fn read_input() -> Result<Vec<BoardingPass>, ioError> {
@@ -118,6 +141,20 @@ mod tests {
         let contents = include_str!("example_data");
         let boarding_passes = process_data(contents).unwrap();
 
-        assert_eq!(part_one_solution(boarding_passes), 820);
+        assert_eq!(part_one_solution(&boarding_passes), 820);
+    }
+
+    #[test]
+    fn part_one_solution_is_correct() {
+        let boarding_passes = read_input().unwrap();
+
+        assert_eq!(part_one_solution(&boarding_passes), 951);
+    }
+
+    #[test]
+    fn part_two_solution_is_correct() {
+        let boarding_passes = read_input().unwrap();
+
+        assert_eq!(part_two_solution(&boarding_passes), 653);
     }
 }
