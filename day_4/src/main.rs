@@ -1,4 +1,5 @@
 use day_4::lib::passport::*;
+use day_4::lib::passport_validator::*;
 use std::io::Error as ioError;
 
 fn main() {
@@ -39,14 +40,11 @@ fn part_two_solution(passports: &Vec<Vec<String>>) -> i32 {
             return acc + 1;
         }
         acc
-    });
-
-    0
+    })
 }
 
 fn passport_is_valid(passport: &Passport) -> bool {
-    // passport.is_valid();
-    false
+    validate_passport(passport)
 }
 
 fn read_input() -> Result<Vec<Vec<String>>, ioError> {
@@ -97,6 +95,7 @@ mod tests {
     #[test]
     fn test_part_two_valid_passports() {
         let example_data = part_two_test_data();
+
         assert_eq!(part_two_solution(&example_data), 4);
     }
 }
