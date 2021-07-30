@@ -1,13 +1,13 @@
 #[derive(Default, Debug, Clone)]
 pub struct Passport {
-    birth_year: Option<i32>,
-    issue_year: Option<i32>,
-    expiration_year: Option<String>,
-    height: Option<String>,
-    hair_color: Option<String>,
-    eye_color: Option<String>,
-    passport_id: Option<i32>,
-    country_id: Option<i32>,
+    pub birth_year: Option<i32>,
+    pub issue_year: Option<i32>,
+    pub expiration_year: Option<i32>,
+    pub height: Option<String>,
+    pub hair_color: Option<String>,
+    pub eye_color: Option<String>,
+    pub passport_id: Option<String>,
+    pub country_id: Option<i32>,
 }
 
 impl Passport {

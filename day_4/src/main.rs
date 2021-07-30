@@ -97,6 +97,6 @@ mod tests {
     #[test]
     fn test_part_two_valid_passports() {
         let example_data = part_two_test_data();
-        assert_eq!(part_two_solution(example_data), 4);
+        assert_eq!(part_two_solution(&example_data), 4);
     }
 }
