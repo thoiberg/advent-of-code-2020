@@ -1,8 +1,6 @@
 use std::io::Error as ioError;
 
 fn main() {
-    println!("Hello, world!");
-
     let passports = read_input().unwrap();
 
     let first_solution = part_one_solution(passports);
@@ -22,8 +20,6 @@ fn part_one_solution(passports: Vec<Vec<String>>) -> i32 {
     for passport in passports {
         passport_objs.push(Passport::new(passport));
     }
-
-    println!("Passport obj: {:?}", passport_objs[0]);
 
     passport_objs.iter().fold(0, |acc, passport| {
         if passport.clone().is_valid() {
