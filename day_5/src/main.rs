@@ -26,17 +26,16 @@ fn part_two_solution(boarding_passes: &Vec<BoardingPass>) -> i32 {
 
     let known_seat_ids: Vec<i32> = boarding_passes.iter().map(|pass| pass.seat_id()).collect();
 
-    let empty_seats = all_possible_seat_ids
+    let empty_seats: Vec<&i32> = all_possible_seat_ids
         .iter()
-        .filter(|seat_id| !known_seat_ids.contains(seat_id));
+        .filter(|seat_id| {
+            !known_seat_ids.contains(seat_id)
+                && known_seat_ids.contains(&(**seat_id + 1))
+                && known_seat_ids.contains(&(**seat_id - 1))
+        })
+        .collect();
 
-    for seat in empty_seats {
-        if known_seat_ids.contains(&(seat + 1)) && known_seat_ids.contains(&(seat - 1)) {
-            return *seat;
-        }
-    }
-
-    0
+    *empty_seats[0]
 }
 
 fn read_input() -> Result<Vec<BoardingPass>, ioError> {
