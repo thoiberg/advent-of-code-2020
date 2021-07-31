@@ -14,13 +14,13 @@ fn main() {
     )
 }
 
-fn part_one_solution(boarding_passes: &Vec<BoardingPass>) -> i32 {
+fn part_one_solution(boarding_passes: &[BoardingPass]) -> i32 {
     boarding_passes
         .iter()
         .fold(0, |acc, pass| cmp::max(acc, pass.seat_id()))
 }
 
-fn part_two_solution(boarding_passes: &Vec<BoardingPass>) -> i32 {
+fn part_two_solution(boarding_passes: &[BoardingPass]) -> i32 {
     let all_possible_seat_range: std::ops::RangeInclusive<i32> = 0..=(127 * 8 + 7);
     let all_possible_seat_ids: Vec<i32> = all_possible_seat_range.collect();
 
